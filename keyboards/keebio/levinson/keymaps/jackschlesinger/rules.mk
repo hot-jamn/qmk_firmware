@@ -1,0 +1,6 @@
+RGBLIGHT_ENABLE = no
+BACKLIGHT_ENABLE = no
+AUDIO_ENABLE = no
+SRC += features/caps_word.c
+TAP_DANCE_ENABLE = yes
+MOUSEKEY_ENABLE = yes
