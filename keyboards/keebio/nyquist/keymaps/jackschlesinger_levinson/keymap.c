@@ -12,6 +12,7 @@ enum layer_names {
 
 enum planck_keycodes {
   QWERTY = SAFE_RANGE,
+  WINQWERTY,
   GAME,
   BACKLIT,
   EXT_PLV,
@@ -106,6 +107,24 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     PROG,         TD(CTRL_CAD),  KC_LALT,  KC_LGUI,  LOWER,   KC_SPC,  KC_SPC,  RAISE,   KC_LEFT,  KC_DOWN,  KC_UP,      KC_RIGHT
 ),
 
+/* Windows Qwerty (Reverses the homerow mod for ctrl and gui, otherwise the same)
+ * ,-----------------------------------------------------------------------------------.
+ * | Tab  |   Q  |   W  |   E  |   R  |   T  |   Y  |   U  |   I  |   O  |   P  | Bksp |
+ * |------+------+------+------+------+------+------+------+------+------+------+------|
+ * | Esc  |   A  |   S  |   D  |   F  |   G  |   H  |   J  |   K  |   L  |   ;  |  "   |
+ * |------+------+------+------+------+------+------+------+------+------+------+------|
+ * | Shift|   Z  |   X  |   C  |   V  |   B  |   N  |   M  |   ,  |   .  |   /  |Enter |
+ * |------+------+------+------+------+------+------+------+------+------+------+------|
+ * | Ctrl | Alt  | GUI  | Prog |Lower |    Space    |Raise | Left | Down |  Up  |Right |
+ * `-----------------------------------------------------------------------------------'
+ */
+[_WINQWERTY] = LAYOUT_ortho_4x12(
+    TD(TAB_GRV),  KC_Q,     KC_W,     KC_E,     KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,     KC_O,     KC_P,        KC_BSPC,
+    ESC_MOUSE,    W_HOME_A, HOME_S,   W_HOME_D, HOME_F,  KC_G,    KC_H,    HOME_J,  W_HOME_K, HOME_L,   W_HOME_SCLN, KC_QUOT,
+    KC_LSFT,      KC_Z,     KC_X,     KC_C,     KC_V,    KC_B,    KC_N,    KC_M,    KC_COMM,  KC_DOT,   KC_SLSH,     KC_ENT,
+    TD(CTRL_CAD), KC_LALT,  KC_LGUI,  PROG,     LOWER,   KC_SPC,  KC_SPC,  RAISE,   KC_LEFT,  KC_DOWN,  KC_UP,       KC_RIGHT
+),
+
 /* MOUSE
  * ,-----------------------------------------------------------------------------------.
  * |      |      |      |      |      |      |      | WH_L | WH_D | WH_U | WH_R | ACC0 |
@@ -192,7 +211,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  */
 [_ADJUST] = LAYOUT_ortho_4x12(
     _______, RESET,   _______,  _______, _______, _______, _______, _______, _______, _______, _______, _______,
-    _______, _______, _______,  _______, _______, _______, _______, QWERTY,  _______, _______, _______, _______,
+    _______, _______, _______,  _______, _______, _______, _______, QWERTY,  WINQWERTY, _______, _______, _______,
     _______, _______, _______,  _______, _______, _______, _______, _______, _______, _______, _______, GAME,
     _______, _______, _______,  _______, _______, _______, _______, _______, _______, _______, _______, _______
 ),
@@ -234,6 +253,12 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     case QWERTY:
       if (record->event.pressed) {
         set_single_persistent_default_layer(_QWERTY);
+      }
+      return false;
+      break;
+    case WINQWERTY:
+      if (record->event.pressed) {
+        set_single_persistent_default_layer(_WINQWERTY);
       }
       return false;
       break;
